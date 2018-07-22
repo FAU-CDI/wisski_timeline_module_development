@@ -3,3 +3,9 @@ jquery_timeline:
     vendor/in19ezej/jquery-timeline/src/timeline.js { minified: false }
   dependencies:
     - core/jquery
+
+example_timeline:
+  js:
+    js/timeline_example.js
+  dependencies:
+    - core/jquery
