@@ -1,0 +1,5 @@
+jquery_timeline:
+  js:
+    vendor/in19ezej/jquery-timeline/src/timeline.js { minified: false }
+  dependencies:
+    - core/jquery
