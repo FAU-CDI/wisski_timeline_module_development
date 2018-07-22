@@ -1,12 +1,13 @@
-(function ($, Drupal) {
+(function ($) {
   'use strict';
   Drupal.behaviors.example_timeline = {
-    //apply everything here once per element
     attach: function (context, settings) {
      $('input.myCustomBehavior', context).once('myCustomBehavior', function () {
+      console.log('Something happened! Says example_timeline');
       // Apply the myCustomBehaviour effect to all the elements only once.
-         alert("Ein Zufallsereignis ist geschehen!");
+         alert('Ein Zufallsereignis ist geschehen! In example_timeline!');
     });
+      //apply everything here once per element
     }
   };
-})(jQuery, Drupal);
+})(jQuery);

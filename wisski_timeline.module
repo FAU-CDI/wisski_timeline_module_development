@@ -23,3 +23,20 @@ function wisski_timeline_help($path, $arg) {
       break; 
   }
 }
+
+function wisski_timeline_page_attachments(array &$attachments) {
+  print('PAGE ATTACHMENTS HOOK CALLED\n');
+  $attachments['#attached']['library'][] = 'wisski_timeline/example_timeline';
+  print($attachments['#attached']['library']);
+}
+
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function wisski_timeline_element_info_alter(array &$types) {
+  print('ELEMENT INFO ALTER HOOK CALLED');
+  if (isset($types['hello_block'])) {
+    $types['hello_block']['#attached']['library'][] = 'wisski_timeline/example_timeline';
+  }
+}

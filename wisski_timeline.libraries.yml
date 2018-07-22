@@ -1,11 +1,15 @@
 jquery_timeline:
+  version: 1.0.0
   js:
-    vendor/in19ezej/jquery-timeline/src/timeline.js { minified: false }
+    vendor/in19ezej/jquery-timeline/src/timeline.js: {}
   dependencies:
     - core/jquery
 
 example_timeline:
+  version: 1.0.0
   js:
-    js/timeline_example.js
+    js/example_timeline.js: {}
   dependencies:
     - core/jquery
+    - core/drupalSettings
+
