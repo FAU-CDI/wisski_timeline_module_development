@@ -1,0 +1,10 @@
+jquery_timeline:
+  remote: https://github.com/ka215/jquery.timeline
+  license:
+    name: MIT
+    remote: https://github.com/ka215/jquery.timeline/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    //TODO: {type: external, minified: true}
+  dependencies:
+    - core/jquery

@@ -1,0 +1,7 @@
+wisski_timeline.content:
+  path: '/wisski_timeline/content'
+  defaults:
+    _controller: '\Drupal\wisski_timeline\Controller\hello_controller::content'
+    _title: 'Hello World'
+  requirements:
+    _permission: 'access content'

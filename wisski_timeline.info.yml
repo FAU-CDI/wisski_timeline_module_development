@@ -1,0 +1,6 @@
+name: WissKI Timeline Module
+description: Shows data on a timeline using a javascript library.
+package: Custom
+type: module
+version: 0.1-dev
+core: 8.x

@@ -1,0 +1,25 @@
+<?php
+
+/**
+* @file implementation of the hook system for the wisski_timeline.
+* actually only contains the help_hook
+*/
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+
+function wisski_timeline_help($path, $arg) {
+  switch ($path) {
+    case "help.page.wisski_timeline":
+      return t("This module generates a timeline base on your data; please consult README to get further information."); 
+      break; 
+  }
+}
