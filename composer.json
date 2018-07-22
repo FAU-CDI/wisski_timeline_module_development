@@ -1,7 +1,7 @@
 {
     "repositories": [
         {
-            "type": vcs,
+            "type": "vcs",
             "url": "git@gitlab.cs.fau.de:in19ezej/jquery.timeline_wrapper.git"
         }
     ],
