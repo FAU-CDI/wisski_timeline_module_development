@@ -1,9 +1,13 @@
-jquery_timeline:
-  version: 1.0.0
+readmorejs:
+  header: true
+  remote: https://github.com/jedfoster/Readmore.js
+  version: 2.2.0
+  license:
+    name: MIT
+    remote: https://github.com/jedfoster/Readmore.js/blob/v2.2.0/LICENSE
+    gpl-compatible: true
   js:
-    vendor/in19ezej/jquery-timeline/src/timeline.js: {}
-  dependencies:
-    - core/jquery
+    https://cdnjs.cloudflare.com/ajax/libs/Readmore.js/2.2.0/readmore.min.js: { type: external, minified: true, weight: -100 }
 
 example_timeline:
   version: 1.0.0
@@ -13,3 +17,9 @@ example_timeline:
     - core/jquery
     - core/drupalSettings
 
+jquery_timeline:
+  version: 1.0.0
+  js:
+    vendor/in19ezej/jquery-timeline/src/timeline.js: {}
+  dependencies:
+    - core/jquery

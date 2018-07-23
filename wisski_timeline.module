@@ -25,10 +25,29 @@ function wisski_timeline_help($path, $arg) {
 }
 
 function wisski_timeline_page_attachments(array &$attachments) {
+  error_reporting(E_ALL);
+  ini_set('display_errors', TRUE);
+  ini_set('display_startup_errors', TRUE);
   print('PAGE ATTACHMENTS HOOK CALLED\n');
   $attachments['#attached']['library'][] = 'wisski_timeline/example_timeline';
-  print($attachments['#attached']['library']);
+  $attachments['#attached']['library'][] = 'wisski_timeline/readmorejs';
+  var_dump($attachments);
+  //console.log('TEST');
+  //pint('TEST');
+  // Conditionally remove an asset.
+  /*if (in_array('wisski_timeline/example_timeline', $attachments['#attached']['library'])) {
+    $index = array_search('wisski_timeline/example_timeline', $attachments['#attached']['library']);
+    print($attachments['#attached']['library'][$index]);
+  }*/
+  //print($attachments['#attached']['library']);
 }
+
+function wisski_timeline_page_attachments_alter(array &$attachments) {
+  //print('PAGE ATTACHMENTS ALTER HOOK CALLED\n');
+  //$attachments['#attached']['library'][] = 'wisski_timeline/example_timeline';
+  //print($attachments['#attached']['library']);
+}
+
 
 
 /**
