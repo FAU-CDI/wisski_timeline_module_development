@@ -11,15 +11,11 @@ class hello_controller extends ControllerBase {
    * @return array
    */
   public function content() {
-    return [
+    $result = [
       '#type' => 'markup',
       '#markup' => $this->t('Hello, World!'),
-      /*'#attached' [
-        'library' [
-          'js/example_timeline'
-        ]
-      ],*/
     ];
+    return $result;
   }
 
 }

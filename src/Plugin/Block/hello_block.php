@@ -19,9 +19,17 @@ class hello_block extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    return array(
+    $result = array(
       '#markup' => $this->t('Hello, World!'),
+      '#attached' => array(
+        'library' => array(
+          'wisski_timeline/example_timeline',
+        ),
+      ),
     );
+    $result['#hello_block']['#attached']['library'] = 'wisski_timeline/example_timeline';
+    //$result['#attached']['library'][] = 'wisski_timeline/example_timeline';
+    return $result;
   }
 
 }

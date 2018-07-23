@@ -1,14 +1,3 @@
-readmorejs:
-  header: true
-  remote: https://github.com/jedfoster/Readmore.js
-  version: 2.2.0
-  license:
-    name: MIT
-    remote: https://github.com/jedfoster/Readmore.js/blob/v2.2.0/LICENSE
-    gpl-compatible: true
-  js:
-    https://cdnjs.cloudflare.com/ajax/libs/Readmore.js/2.2.0/readmore.min.js: { type: external, minified: true, weight: -100 }
-
 example_timeline:
   version: 1.0.0
   js:
@@ -16,9 +5,15 @@ example_timeline:
   dependencies:
     - core/jquery
     - core/drupalSettings
+    - core/jquery.once
+    - core/drupal
+    - wisski_timeline/jquery_timeline
 
 jquery_timeline:
   version: 1.0.0
+  css:
+    layout:
+      vendor/in19ezej/jquery-timeline/dist/timeline.min.css: { minified: true }
   js:
     vendor/in19ezej/jquery-timeline/src/timeline.js: {}
   dependencies:
