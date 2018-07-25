@@ -1,6 +1,10 @@
 example_timeline:
   version: 1.0.0
+  css:
+    layout:
+      vendor/in19ezej/jquery-timeline/dist/timeline.min.css: { minified: true }
   js:
+    vendor/in19ezej/jquery-timeline/src/timeline.js: {}
     js/example_timeline.js: {}
   dependencies:
     - core/jquery

@@ -4,7 +4,10 @@
     attach: function (context, settings) {
     alert('HOFFENTLICH - example_timeline');
     console.log(context);
-    var timelineToDisplay = $("#myTimeline").timeline();
+    
+    $("#myTimeline").timeline();
+
+    var myTimeline = $("#myTimeline").timeline();
     //used in example
     $(function () {
       $("#myTimeline").timeline({
