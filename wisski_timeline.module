@@ -28,7 +28,7 @@ function wisski_timeline_page_attachments(array &$attachments) {
   error_reporting(E_ALL);
   ini_set('display_errors', TRUE);
   ini_set('display_startup_errors', TRUE);
-  print('PAGE ATTACHMENTS HOOK CALLED\n');
+
   //$attachments['#attached']['library'][] = 'wisski_timeline/example_timeline';
   
   //var_dump($attachments);
@@ -53,7 +53,7 @@ function wisski_timeline_page_attachments_alter(array &$attachments) {
  * Implements hook_element_info_alter().
  */
 function wisski_timeline_element_info_alter(array &$types) {
-  print('ELEMENT INFO ALTER HOOK CALLED');
+  //print('ELEMENT INFO ALTER HOOK CALLED');
   //var_dump($types);
   /*if (isset($types['hello_block'])) {
     $types['hello_block']['#attached']['library'][] = 'wisski_timeline/example_timeline';

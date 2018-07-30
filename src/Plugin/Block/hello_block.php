@@ -10,7 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @Block(
  *   id = "hello_block",
- *   admin_label = @Translation("Hello block"),
+ *   admin_label = @Translation("Hello block!"),
  *   category = @Translation("Hello World"),
  * )
  */
@@ -28,7 +28,7 @@ class hello_block extends BlockBase {
       $name = $this->t('to no one');
     }
 
-    $my_dom = $this->load_my_html_example('');
+    $my_dom = $this->load_my_html('');
 
     $result = array(
       /*'#markup' => $this->t('Hello @name!', array(
@@ -38,7 +38,7 @@ class hello_block extends BlockBase {
       '#children' => $my_dom->saveHTML(),
       '#attached' => array(
         'library' => array(
-          'wisski_timeline/jquery_timeline',
+         // 'wisski_timeline/jquery_timeline',
           'wisski_timeline/example_timeline',
         ),
       ),
@@ -102,16 +102,15 @@ EOD;
 
 public function load_my_html($html) {
    $document = <<<EOD
-<!DOCTYPE html>
-<html>
+
 <div id="myTimeline">
   <ul class="timeline-events">
-    <li data-timeline-node="{ start:'2017-05-26 10:00',end:'2017-05-26 13:00',content:'text text text text ...' }">Event Label</li>
-    <li data-timeline-node="{ start:'2017-05-26 23:10',end:'2017-05-27 1:30',content:'<p>In this way, you can include <em>HTML tags</em> in the event body.<br>:<br>:</p>' }">Event Label</li>
+    <li data-timeline-node="{ start:'2018-07-26 23:10',end:'2018-08-27 1:30',row:2,content:'<p>In this way, you can include <em>HTML tags</em> in the event body.<br>:<br>:</p>' }">Event Label</li>
+    <li data-timeline-node="{ start:'2018-07-30 19:00',end:'2017-07-31 1:00',row:1,bgColor:'#fbdac8' }">MYOWNEvent</li>
+    <li data-timeline-node="{ start:'2018-07-30 10:00',end:'2018-07-30 13:00',content:'text text text text ...' }">Event Label</li>
   </ul>
 </div>
 <div class="timeline-event-view"></div>
-<\html>
 EOD;
  
    // PHP's \DOMDocument serialization adds extra whitespace when the markup

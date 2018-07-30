@@ -7,10 +7,10 @@ example_timeline:
     vendor/in19ezej/jquery-timeline/src/timeline.js: {}
     js/example_timeline.js: {}
   dependencies:
+    - core/drupal
     - core/jquery
     - core/drupalSettings
     - core/jquery.once
-    - core/drupal
     - wisski_timeline/jquery_timeline
 
 jquery_timeline:
