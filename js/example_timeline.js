@@ -5,7 +5,7 @@
     //alert('HOFFENTLICH - example_timeline');
     console.log("context: ");
     console.log(context);
-   
+  
     var exists = $("#myTimeline", context);
     console.log("exists: ");
     console.log(exists);
@@ -19,13 +19,16 @@
           range: 10,*/
 	  langsDir : 'vendor/in19ezej/jquery-timeline/dist/langs/',
       }).init();
-      myTimeline.timeline( 'addEvent', [
-	{start:'2018-7-30 08:00',end:'2018-7-30 10:00',label:'Event 1a',content:'Event body'},
-	{start:'2018-8-31 09:30',end:'2018-7-31 10:15',label:'Event 2a',content:'Event body'}
-      ],
-	function( self, data ){
-	  console.log('Events addition successfully!');
+
+      var events_to_add = [{start:'2018-07-29 08:00',end:'2018-07-29 10:00',label:'Event 1a',content:'Event body'}];
+      var events_added_confirm_func = function( self, data ){
+        console.log('Events addition successfully!');
+      };
+
+      $("#myTimeline").on('afterRender.timeline', function(){
+        $("#myTimeline").timeline('addEvent', events_to_add, events_added_confirm_func);
       });
+
     });
     
 /*    var myTimeline = $("#myTimeline").timeline({
