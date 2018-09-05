@@ -1,0 +1,3 @@
+[submodule "vendor/in19ezej/jquery-timeline"]
+	path = vendor/in19ezej/jquery-timeline
+	url = git@gitlab.cs.fau.de:in19ezej/jquery-timeline.git
