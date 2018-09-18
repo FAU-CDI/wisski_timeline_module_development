@@ -134,6 +134,7 @@ class hello_block extends BlockBase {
 
               // get the data for this specific thing
               $tmpdata = $engine->pathToReturnValue($path, $pb, $individualid, 0, 'target_id', FALSE);
+              //TODO: earliest, latest
 #              drupal_set_message("path: " . serialize($path));
 
 #              dpm($tmpdata, "tmp");
@@ -146,6 +147,7 @@ class hello_block extends BlockBase {
                   $dataout[$path->id()]['data'] = array();
 
                 $dataout[$path->id()]['data'] = array_merge($dataout[$path->id()]['data'], $tmpdata);
+                //TODO: eraliest. latest, etc.
               }
             }
 
