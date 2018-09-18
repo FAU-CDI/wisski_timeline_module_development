@@ -159,7 +159,7 @@ class hello_block extends BlockBase {
 
     // cache for 2 seconds so subsequent queries seem to be fast
 #    if(!empty($dataout))  
-    $out[]['#cache']['max-age'] = 2;
+    //$out[]['#cache']['max-age'] = 2;
     // this does not work
 #    $out['#cache']['disabled'] = TRUE;
 #    $out[] = [ '#markup' => 'Time : ' . date("H:i:s"),];
