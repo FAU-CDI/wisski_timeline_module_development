@@ -157,4 +157,65 @@
       //apply everything here once per element
     }
   };
+
+  //Funktion gibt 0 zurueck, falls left und right das gleiche Datum haben
+  //Funktion gibt einen positiven Wert zurück, falls left ein späteres Datum ist als right, ansonsten einen negativen
+  // -oo ust eine konstante, die das niedrigst-mögliche DAtum ausdrückt => ist immer das kleinstmögliche Datum und wird auch dementsrprechend behandelt.
+  function compare_date_strings(left, right){
+    var a = left;
+    var b = right;
+    console.log("COMPARED: " + a + ", " + b);
+    if(a === '-oo' && b === '-oo'){
+      return 0;
+    } else if(a === '-oo') {
+      return -1;
+    } else if(b === '-oo'){
+      return 1;
+    }
+    var a_neg = false, b_neg = false;
+    if(a[0] === '-'){
+      a_neg = true;
+      a = a.substr(1, a.length);
+    }
+    if(b[0] === '-'){
+      b_neg = true;
+      b = b.substr(1, b.length);
+    }
+    if(a_neg && !b_neg){
+      return -1;
+    }
+    if(b_neg && !a_neg){
+      return 1;
+    }
+    if(a_neg && b_neg){
+      return parseInt(b[0]) - parseInt(a[0]);
+    }
+    var _regx = /-|\/|\s|\:/g;
+    a = a.split(_regx);
+    b = b.split(_regx);
+    for(var i=0; i<Math.min(a.length, b.length); ++i){
+      var a_parsed = parseInt(a[i]);
+      var b_parsed = parseInt(b[i]);
+      if(a_parsed != b_parsed){
+        return a_parsed - b_parsed;
+      }
+    }
+    //Achtung, in Randfällen könnte jemand 00:00 angeben und das wäre dasselbe wie das weglassen der Angabe
+    if(b.length > a.length) {
+      for(var i=a.length; i<b.length; ++i){
+        if(parseInt(b[i]) !== 0 || (parseInt(b[i]!== 1 && i == 2))){
+	  return -1;
+	}
+      }
+    }
+    if(a.length > b.length) {
+      for(var i=b.length; i<a.length; ++i){
+        if(parseInt(a[i]) !== 0 || (parseInt(b[i]!== 1 && i == 2))){
+	  return 1;
+	}
+      }
+    }
+    return 0;
+        //return a['start'] - b['start'];
+  }
 })(jQuery);
