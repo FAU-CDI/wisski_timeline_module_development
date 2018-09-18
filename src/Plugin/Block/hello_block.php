@@ -174,14 +174,25 @@ class hello_block extends BlockBase {
     //Timelinegrundgeruest
     $my_dom = $this->load_my_html('');
 
+    $test_var = 5;
+
     $out[] = array(
       '#children' => $my_dom->saveHTML(),
       '#attached' => array(
         'library' => array(
           'wisski_timeline/example_timeline',
-        ),
+        ),/*
+	'drupalSettings' => array(
+	  'wisski_timeline' => array(
+	    'example_timelineJS' => array(
+	      'test_var' => $test_var,
+	    )
+	  ),
+	),*/
       ),
     );
+
+    $timeline_array = array();
 
     //OUTput like in Linkblock
     foreach($dataout as $pathid => $dataarray) {
@@ -199,6 +210,7 @@ class hello_block extends BlockBase {
 
         if(isset($data['wisskiDisamb']))
           $url = $data['wisskiDisamb'];
+        $wisskiDisamb = $url;
 
         if(!empty($url)) {
 
@@ -228,11 +240,11 @@ class hello_block extends BlockBase {
 #          dpm($entity);
           $url = 'wisski/navigate/' . $entity_id . '/view';
 #          dpm($bundle);
-
+          $timeline_array[$wisskiDisamb][$path->getName()] = $data['target_id']; //TODO
           // special handling for paths with datatypes - use the value from there for reference
           // if you don't want this - use disamb directly!
           if($path->getDatatypeProperty() != "empty") {
-
+            var_dump($path->getDatatypeProperty());
             $out[] = array(
               '#type' => 'link',
 #                 '#title' => $data['target_id'],
@@ -263,6 +275,8 @@ class hello_block extends BlockBase {
     }
 
 
+    $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['test_var'][] = $test_var;
+    $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_array'][] = $timeline_array;
 
 
 
