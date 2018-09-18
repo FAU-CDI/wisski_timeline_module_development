@@ -44,15 +44,9 @@
           outer_element_to_add['end'] = element_obj['latest_end'];
           outer_element_to_add['content'] = 'TODO: outer element';
           outer_element_to_add['row'] = 3;
-	  if(outer_element_to_add['start'] <= outer_element_to_add['end']){
-            events_to_add.push(outer_element_to_add);
-          }else {
-		alert("Ein Outer-Element hoert auf, bevor es beginnt!");
-          }
 	  var has_early_end = element_obj['earliest_end'];
 	  var has_late_start = element_obj['latest_start'];
 	  if(has_early_end || has_late_start){
-	    //console.log("early start and/or late end DETECTED!");
 	    inner_element_to_add['label'] = element_obj['name_of_period'];
             inner_element_to_add['content'] = 'TODO: inner element';
 	    inner_element_to_add['row'] = 3;
@@ -70,12 +64,18 @@
 	      inner_element_to_add['end'] = element_obj['latest_end'];
 	    }	  
             if(inner_element_to_add['start'] <= inner_element_to_add['end']){
-              events_to_add.push(inner_element_to_add);
+              //events_to_add.push(inner_element_to_add);
+              outer_element_to_add['inner_element'] = inner_element_to_add;
             }else {
-		alert("Ein inneres Element hoert auf, bevor es beginnt!");
+		//alert("Ein inneres Element hoert auf, bevor es beginnt!");
             }
 	    //events_to_add.push(inner_element_to_add);
 	  }
+	  if(outer_element_to_add['start'] <= outer_element_to_add['end']){
+            events_to_add.push(outer_element_to_add);
+          }else {
+	    //alert("Ein Outer-Element hoert auf, bevor es beginnt!");
+          }
 
           //console.log(outer_element_to_add);
         }
@@ -86,9 +86,53 @@
       });
 //$out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS'][wisskiDisamb][$path->getName()] = $data['target_id'];
 
+      events_to_add.sort(function(left, right){
+	var a = left['start'];
+	var b = right['start'];
+	return compare_date_strings(a, b);
+        //return a['start'] - b['start'];
+      });
+
+
+      events_to_add.forEach(function(element){
+        console.log("ELEMENT: " + element['start']);
+      });
+
+      var first_row = 3; //erste Zeile, in der was gezeichnet werden soll //TODO: Abhaengig von Endversion
+      var numb_rows = 5; //ANzahl der rows der Timeline //TODO: abhaengig von INitialisierung!
+      var up_boarders = [];
+      for(var j=0; j<numb_rows+1; j++){
+        // Veraltet: Hack für den Anfangswert: Nimm nur '-'  Dadurch, dass  das '-' am Anfang weggenommen wird, bleibt nur noch ein leerer STring übrig. Ein leerer String ist immer kürzer als ein anderer String und damit wird dessen Wert als kleiner gewertet.; 
+        // wird mit Konstante für niedrigstmögliches Datun befüllt
+        up_boarders[j] = "-oo";
+      }
+      var inner_elements_to_add = [];
+      events_to_add.forEach(function(curr_event){
+        for(var j=first_row; j<numb_rows+1; j++){
+	  console.log("" + j + " UP_BOARDER: " + up_boarders[j]);
+	  if(compare_date_strings(up_boarders[j], curr_event['start']) < 0){
+            console.log("COMPARED: " + compare_date_strings(up_boarders[j], curr_event['start']));
+	    curr_event['row'] = j;
+	    up_boarders[j] = curr_event['end'];
+	    if(curr_event['inner_element'] !== undefined){
+	      curr_event['inner_element']['row'] = j;
+	      inner_elements_to_add.push(curr_event['inner_element']);
+	    }
+	    //console.log("EVENT ANOTATED!");
+	    break;
+	  }
+	}
+	//TODO: Soll man es evtl. auch setzen, wenn es niergends mehr reinpasst?
+      });
+      inner_elements_to_add.forEach(function(element){
+        events_to_add.push(element);
+      });
+
+
       var events_added_confirm_func = function( self, data ){
         console.log('Events addition successfully!');
       };
+
 
 
       $("#myTimeline").on('afterRender.timeline', function(){
