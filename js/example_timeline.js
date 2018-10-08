@@ -14,10 +14,16 @@
       var myTimeline = $("#myTimeline").timeline({
 	  type  : "bar",
           startDatetime: '-002018/07/29',
-	  scale: 'months', 
-          //scale: 'years',
           //scale: 'days',
+	  //scale: 'months', 
+          //scale: 'years',
+	  //scale: 'decades',
+	  scale: 'centuries',
+          //scale: 'millennia',
+	  //scale: 'millions',
+	  //scale: 'billions',
           range: 10,
+	  rows: 10,
 	  langsDir : 'vendor/in19ezej/jquery-timeline/dist/langs/',
       }).init();
 
@@ -231,12 +237,12 @@
     if(b_neg && !a_neg){
       return 1;
     }
-    if(a_neg && b_neg){
-      return parseInt(b[0]) - parseInt(a[0]);
-    }
     var _regx = /-|\/|\s|\:/g;
     a = a.split(_regx);
     b = b.split(_regx);
+    if(a_neg && b_neg){
+      return parseInt(b[0]) - parseInt(a[0]);
+    }
     for(var i=0; i<Math.min(a.length, b.length); ++i){
       var a_parsed = parseInt(a[i]);
       var b_parsed = parseInt(b[i]);
