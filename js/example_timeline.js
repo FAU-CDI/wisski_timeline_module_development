@@ -13,12 +13,13 @@
       //alert('Something happened! In example_timeline!');
       var myTimeline = $("#myTimeline").timeline({
 	  type  : "bar",
-          startDatetime: '-002018/07/29',
+          //startDatetime: '-002018/07/29',
+          startDatetime: '1800/07/29',	//before Biedermeier
           //scale: 'days',
 	  //scale: 'months', 
           //scale: 'years',
-	  //scale: 'decades',
-	  scale: 'centuries',
+	  scale: 'decades',
+	  //scale: 'centuries',
           //scale: 'millennia',
 	  //scale: 'millions',
 	  //scale: 'billions',
@@ -35,6 +36,7 @@
         console.log(element);
       });*/
       var timeline_array =  drupalSettings.wisski_timeline.example_timelineJS.timeline_array;
+      var timeline_link_array = drupalSettings.wisski_timeline.example_timelineJS.timeline_link_array;
       timeline_array.forEach(function(timeline_elements){
         //console.log(timeline_element);
         /*timeline_element.forEach(function(attribute){
@@ -48,7 +50,8 @@
           outer_element_to_add['label'] = element_obj['name_of_period'];
           outer_element_to_add['start'] = element_obj['earliest_start'];
           outer_element_to_add['end'] = element_obj['latest_end'];
-          outer_element_to_add['content'] = 'TODO: outer element';
+	  var url_str = window.location.protocol + "//" + window.location.hostname + "/" + timeline_link_array[0][outer_element_to_add['label']];
+          outer_element_to_add['content'] = 'TODO: outer element: ' + url_str.link(url_str); 
           outer_element_to_add['row'] = 3;
 	  var has_early_end = element_obj['earliest_end'];
 	  var has_late_start = element_obj['latest_start'];
@@ -73,14 +76,15 @@
               //events_to_add.push(inner_element_to_add);
               outer_element_to_add['inner_element'] = inner_element_to_add;
             }else {
-		//alert("Ein inneres Element hoert auf, bevor es beginnt!");
+		console.log("Ein inneres Element hoert auf, bevor es beginnt!");
+		//TODO: Wie soll die Anzeige in einem solchen Fall sein?
             }
 	    //events_to_add.push(inner_element_to_add);
 	  }
 	  if(outer_element_to_add['start'] <= outer_element_to_add['end']){
             events_to_add.push(outer_element_to_add);
           }else {
-	    //alert("Ein Outer-Element hoert auf, bevor es beginnt!");
+	    console.log("Ein Outer-Element hoert auf, bevor es beginnt!");
           }
 
           //console.log(outer_element_to_add);

@@ -40,6 +40,8 @@ class hello_block extends BlockBase {
       $multimode = FALSE;
 
     $out = array();
+    //cache must be rebuilt for every  site!
+    $out['#cache']['max-age'] = 0;
 
     // what individual is queried?
     $individualid = \Drupal::routeMatch()->getParameter('wisski_individual');
@@ -100,7 +102,6 @@ class hello_block extends BlockBase {
       // iterate all groups    
       foreach($groups as $group) {
         $linkgroup = \Drupal\wisski_pathbuilder\Entity\WisskiPathEntity::load($group->id());
-
 
         // if there is any
         if(!empty($linkgroup)) {
@@ -195,6 +196,7 @@ class hello_block extends BlockBase {
     );
 
     $timeline_array = array();
+    $timeline_link_array = array();
 
     //OUTput like in Linkblock
     foreach($dataout as $pathid => $dataarray) {
@@ -214,6 +216,8 @@ class hello_block extends BlockBase {
           $url = $data['wisskiDisamb'];
         $wisskiDisamb = $url;
 
+//@debug
+//        var_dump($path->getName());
         if(!empty($url)) {
 
           $entity_id = AdapterHelper::getDrupalIdForUri($url);
@@ -242,11 +246,14 @@ class hello_block extends BlockBase {
 #          dpm($entity);
           $url = 'wisski/navigate/' . $entity_id . '/view';
 #          dpm($bundle);
-          $timeline_array[$wisskiDisamb][$path->getName()] = $data['target_id']; //TODO
-          // special handling for paths with datatypes - use the value from there for reference
+	  if($path->getName() == "link_it"){
+            $timeline_link_array[$data['target_id']] = $url; //contains: 'target_id' and 'wisskiDisamb'
+	  }else {
+            $timeline_array[$wisskiDisamb][$path->getName()] = $data['target_id']; //TODO
+          }
+	  // special handling for paths with datatypes - use the value from there for reference
           // if you don't want this - use disamb directly!
           if($path->getDatatypeProperty() != "empty") {
-            var_dump($path->getDatatypeProperty());
             $out[] = array(
               '#type' => 'link',
 #                 '#title' => $data['target_id'],
@@ -276,10 +283,9 @@ class hello_block extends BlockBase {
       }
     }
 
-
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['test_var'][] = $test_var;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_array'][] = $timeline_array;
-
+    $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_link_array'][] = $timeline_link_array;
 
 
 
