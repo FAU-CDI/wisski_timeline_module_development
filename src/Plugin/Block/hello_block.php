@@ -27,12 +27,12 @@ class hello_block extends BlockBase {
   public function build() {
     $config = $this->getConfiguration();
     
-#    if (isset($config['better_lb']) && $config['better_lb']) {
-#      return $this->betterBuild();
-#    }
 
-#  dpm($config);
-
+    /*
+      This part of the Code is based on the Code of "WissKI Linkblock", therefore all credits for getting the right instances of an entity go to the authors of the Linkblock
+      I could not find a file refering to the actual authors so I looked at git log.
+      According to git log history, the authors are the following users: Knurg, Martin Scholz, Michael Dittwald, WissKI, domerz@wisski, fitschen, m.dittwald, mon12ey12ing, root
+    */
     // check if we ask for multiple pbs and multiple adapters.
     if(isset($config['multi_pb']))
       $multimode = $config['multi_pb'];
@@ -198,7 +198,7 @@ class hello_block extends BlockBase {
     $timeline_array = array();
     $timeline_link_array = array();
 
-    //OUTput like in Linkblock
+    //Output like in Linkblock
     foreach($dataout as $pathid => $dataarray) {
       $path = $dataarray['path'];
       $adapter = $dataarray['adapter'];
