@@ -14,7 +14,8 @@
       var myTimeline = $("#myTimeline").timeline({
 	  type  : "bar",
           //startDatetime: '-002018/07/29',
-          startDatetime: '1800/07/29',	//before Biedermeier
+          startDatetime: '11/10/10 v. Chr.',
+          //startDatetime: '1613/07/29',	//before Biedermeier
           //scale: 'days',
 	  //scale: 'months', 
           //scale: 'years',
@@ -23,7 +24,7 @@
           //scale: 'millennia',
 	  //scale: 'millions',
 	  //scale: 'billions',
-          range: 10,
+          range: 50,
 	  rows: 10,
 	  langsDir : 'vendor/in19ezej/jquery-timeline/dist/langs/',
       }).init();
