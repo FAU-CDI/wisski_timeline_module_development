@@ -47,19 +47,25 @@
           var inner_element_to_add = {};
 	  //console.log(timeline_elements[key]);i
           var element_obj = timeline_elements[key];
-          outer_element_to_add['label'] = element_obj['name_of_period'];
+          var has_object = element_obj['name_of_object'];
+          //we probably have a sub-timespan, if name_of_object is not set
+          if(!has_object){
+            continue;
+          }
+          outer_element_to_add['label'] = element_obj['name_of_object'];
           outer_element_to_add['start'] = element_obj['earliest_start'];
           outer_element_to_add['end'] = element_obj['latest_end'];
+	  outer_element_to_add['bgColor'] = '#3300ff';
+	  outer_element_to_add['color'] = '#FFFFFF';
 	  var url_str = window.location.protocol + "//" + window.location.hostname + "/" + timeline_link_array[0][outer_element_to_add['label']];
-          outer_element_to_add['content'] = 'TODO: outer element: ' + url_str.link(url_str); 
+          outer_element_to_add['content'] = 'größtmögliche Zeitspanne des Objekts: ' + element_obj['name_of_object'].link(url_str); 
           outer_element_to_add['row'] = 3;
 	  var has_early_end = element_obj['earliest_end'];
 	  var has_late_start = element_obj['latest_start'];
 	  if(has_early_end || has_late_start){
-	    inner_element_to_add['label'] = element_obj['name_of_period'];
-            inner_element_to_add['content'] = 'TODO: inner element';
+	    inner_element_to_add['label'] = element_obj['name_of_object'];
 	    inner_element_to_add['row'] = 3;
-	    inner_element_to_add['bgColor'] = '#aaaab0';
+	    inner_element_to_add['color'] = '#FFFFFF';
 	    if(has_late_start){
 	      inner_element_to_add['start'] = element_obj['latest_start'];
 	    }
@@ -71,20 +77,22 @@
 	    }
 	    else{
 	      inner_element_to_add['end'] = element_obj['latest_end'];
-	    }	  
-            if(inner_element_to_add['start'] <= inner_element_to_add['end']){
-              //events_to_add.push(inner_element_to_add);
+	    } 
+            if(compare_date_strings(inner_element_to_add['start'], inner_element_to_add['end']) < 0){
+	      inner_element_to_add['bgColor'] = '#33CCCC';
+              inner_element_to_add['content'] = 'gesichertes Intervall des Objekts: ' + element_obj['name_of_object'].link(url_str);
               outer_element_to_add['inner_element'] = inner_element_to_add;
             }else {
-		console.log("Ein inneres Element hoert auf, bevor es beginnt!");
-		//TODO: Wie soll die Anzeige in einem solchen Fall sein?
+	      inner_element_to_add['bgColor'] = '#990066';
+              inner_element_to_add['content'] = 'potentieller Teil des Intervalls des Objekts: ' + element_obj['name_of_object'].link(url_str);
+              outer_element_to_add['inner_element'] = inner_element_to_add;
             }
 	    //events_to_add.push(inner_element_to_add);
 	  }
-	  if(outer_element_to_add['start'] <= outer_element_to_add['end']){
+	  if(compare_date_strings(outer_element_to_add['start'], outer_element_to_add['end']) <= 0){
             events_to_add.push(outer_element_to_add);
           }else {
-	    console.log("Ein Outer-Element hoert auf, bevor es beginnt!");
+	    console.log("Fehler: Ein äußeres Intervall  hoert auf, bevor es beginnt!");
           }
 
           //console.log(outer_element_to_add);
@@ -108,7 +116,7 @@
         console.log("ELEMENT: " + element['start']);
       });
 
-      var first_row = 3; //erste Zeile, in der was gezeichnet werden soll //TODO: Abhaengig von Endversion
+      var first_row = 2; //erste Zeile, in der was gezeichnet werden soll //TODO: Abhaengig von Endversion
       var numb_rows = 5; //ANzahl der rows der Timeline //TODO: abhaengig von INitialisierung!
       var up_boarders = [];
       for(var j=0; j<numb_rows+1; j++){
@@ -118,8 +126,9 @@
       }
       var inner_elements_to_add = [];
       events_to_add.forEach(function(curr_event){
+        var enough_space = false;
         for(var j=first_row; j<numb_rows+1; j++){
-	  console.log("" + j + " UP_BOARDER: " + up_boarders[j]);
+	  //console.log("" + j + " UP_BOARDER: " + up_boarders[j]);
 	  if(compare_date_strings(up_boarders[j], curr_event['start']) < 0){
             console.log("COMPARED: " + compare_date_strings(up_boarders[j], curr_event['start']));
 	    curr_event['row'] = j;
@@ -129,9 +138,13 @@
 	      inner_elements_to_add.push(curr_event['inner_element']);
 	    }
 	    //console.log("EVENT ANOTATED!");
+            enough_space = true;
 	    break;
 	  }
 	}
+        if(!enough_space){
+          console.log("Warning: Some objects couldn't be rendered as they would overlap. Ask your administrator to resize the timeline!");
+        }
 	//TODO: Soll man es evtl. auch setzen, wenn es niergends mehr reinpasst?
       });
       inner_elements_to_add.forEach(function(element){
