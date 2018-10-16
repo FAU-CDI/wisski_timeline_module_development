@@ -170,6 +170,7 @@ class hello_block extends BlockBase {
     );
 
     $timeline_array = array();
+    $timeline_my_array = array();
     $timeline_link_array = array();
 
     //Output like in Linkblock
@@ -220,8 +221,11 @@ class hello_block extends BlockBase {
 #          dpm($bundle);
 	  if($path->getName() === "link_it"){
             $timeline_link_array[$data['target_id']] = $url; //contains: 'target_id' and 'wisskiDisamb'
-	  }else {
-            $timeline_array[$wisskiDisamb][$path->getName()] = $data['target_id']; //TODO
+	  }else if(strpos($path->getName(), 'my') === 0){
+	    $timeline_my_array[$wisskiDisamb][$path->getName()] = $data['target_id'];
+	  }
+	  else {
+            $timeline_array[$wisskiDisamb][$path->getName()] = $data['target_id'];
           }
 	  // special handling for paths with datatypes - use the value from there for reference
           // if you don't want this - use disamb directly!
@@ -258,6 +262,8 @@ class hello_block extends BlockBase {
     }
 
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_array'][] = $timeline_array;
+    $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_my_array'][] = $timeline_my_array;
+var_dump($timeline_my_array);
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_link_array'][] = $timeline_link_array;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['config'][] = $config;
 

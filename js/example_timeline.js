@@ -28,12 +28,69 @@
 	  langsDir : 'vendor/in19ezej/jquery-timeline/dist/langs/',
       }).init();
 
-      var events_to_add = [{start:'2018-07-29 08:00',end:'2018-07-29 10:00',label:'Event 1a',content:'Event body'}];
+      var events_to_add = [/*{start:'2018-07-29 08:00',end:'2018-07-29 10:00',label:'Event 1a',content:'Event body'}*/];
+      var events_added_confirm_func = function( self, data ){
+        //console.log('Events addition successfully!');
+      };
 
       var timeline_array =  drupalSettings.wisski_timeline.example_timelineJS.timeline_array;
       var timeline_link_array = drupalSettings.wisski_timeline.example_timelineJS.timeline_link_array;
-      timeline_array.forEach(function(timeline_elements){
+      var timeline_my_array = drupalSettings.wisski_timeline.example_timelineJS.timeline_my_array;
+      var my_disamb = "";
+
+      var my_elems = [];
+      timeline_my_array.forEach(function(timeline_elements){ 
         for(var key in timeline_elements){  
+	  my_disamb = key;
+	  var element_obj = timeline_elements[key];
+          var outer_elem = {};
+	  var inner_elem = {};
+	  outer_elem['label'] = 'fokusiertes Objekt';
+          outer_elem['start'] = element_obj['my_earliest_start'];
+          outer_elem['end'] = element_obj['my_latest_end'];
+	  outer_elem['bgColor'] = '#3300ff';
+	  outer_elem['color'] = '#FFFFFF';
+          outer_elem['content'] = 'größtmögliche Zeitspanne des aktuell fokusierten Objekts'; 
+          outer_elem['row'] = 1;
+	  my_elems.push(outer_elem);
+	  var has_early_end = element_obj['my_earliest_end'];
+	  var has_late_start = element_obj['my_latest_start'];
+	  if(has_early_end || has_late_start){
+	    inner_elem['label'] = 'fokusiertes Objekt';
+	    inner_elem['row'] = 1;
+	    inner_elem['color'] = '#FFFFFF';
+	    if(has_late_start){
+	      inner_elem['start'] = element_obj['my_latest_start'];
+	    }
+	    else {
+	      inner_elem['start'] = element_obj['my_earliest_start'];
+	    }
+	    if(has_early_end){
+	      inner_elem['end'] = element_obj['my_earliest_end'];
+	    }
+	    else{
+	      inner_elem['end'] = element_obj['my_latest_end'];
+	    } 
+            if(compare_date_strings(inner_elem['start'], inner_elem['end']) < 0){
+	      inner_elem['bgColor'] = '#33CCCC';
+              inner_elem['content'] = 'gesichertes Intervall des aktuell fokussierten Objekts';
+            }else {
+	      inner_elem['bgColor'] = '#990066';
+              inner_elem['content'] = 'potentieller Teil des Intervalls des fokussierten Objekts';
+            }
+	    my_elems.push(inner_elem);
+	  }
+	}
+      });
+      $("#myTimeline").on('afterRender.timeline', function(){
+        $("#myTimeline").timeline('addEvent', my_elems, events_added_confirm_func);
+      });
+
+      timeline_array.forEach(function(timeline_elements){
+        for(var key in timeline_elements){ 
+	  if(key === my_disamb){
+	    continue;
+	  }
           var outer_element_to_add = {};
           var inner_element_to_add = {};
           var element_obj = timeline_elements[key];
@@ -47,7 +104,7 @@
           outer_element_to_add['end'] = element_obj['latest_end'];
 	  outer_element_to_add['bgColor'] = '#3300ff';
 	  outer_element_to_add['color'] = '#FFFFFF';
-	  var url_str = window.location.protocol + "//" + window.location.hostname + "/" + timeline_link_array[0][outer_element_to_add['label']];
+	  var url_str = window.location.protocol + "//" + window.location.hostname + "/" + timeline_link_array[0][element_obj['name_of_object']];
           outer_element_to_add['content'] = 'größtmögliche Zeitspanne des Objekts: ' + element_obj['name_of_object'].link(url_str); 
           outer_element_to_add['row'] = 3;
 	  var has_early_end = element_obj['earliest_end'];
@@ -102,9 +159,9 @@
       });
 
 
-      events_to_add.forEach(function(element){
+      /*events_to_add.forEach(function(element){
         console.log("ELEMENT: " + element['start']);
-      });
+      });*/
 
       var first_row = 2; //erste Zeile, in der was gezeichnet werden soll //TODO: Abhaengig von Endversion
       var numb_rows = 5; //ANzahl der rows der Timeline //TODO: abhaengig von INitialisierung!
@@ -120,7 +177,7 @@
         for(var j=first_row; j<numb_rows+1; j++){
 	  //console.log("" + j + " UP_BOARDER: " + up_boarders[j]);
 	  if(compare_date_strings(up_boarders[j], curr_event['start']) < 0){
-            console.log("COMPARED: " + compare_date_strings(up_boarders[j], curr_event['start']));
+            //console.log("COMPARED: " + compare_date_strings(up_boarders[j], curr_event['start']));
 	    curr_event['row'] = j;
 	    up_boarders[j] = curr_event['end'];
 	    if(curr_event['inner_element'] !== undefined){
@@ -135,16 +192,12 @@
         if(!enough_space){
           console.log("Warning: Some objects couldn't be rendered as they would overlap. Ask your administrator to resize the timeline!");
         }
-	//TODO: Soll man es evtl. auch setzen, wenn es niergends mehr reinpasst?
       });
       inner_elements_to_add.forEach(function(element){
         events_to_add.push(element);
       });
 
 
-      var events_added_confirm_func = function( self, data ){
-        console.log('Events addition successfully!');
-      };
 
 
 
@@ -273,6 +326,5 @@
       }
     }
     return 0;
-        //return a['start'] - b['start'];
   }
 })(jQuery);
