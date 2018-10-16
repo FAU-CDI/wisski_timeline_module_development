@@ -201,7 +201,6 @@
   function compare_date_strings(left, right){
     var a = left;
     var b = right;
-    console.log("COMPARED: " + a + ", " + b);
     if(a === '-oo' && b === '-oo'){
       return 0;
     } else if(a === '-oo') {
