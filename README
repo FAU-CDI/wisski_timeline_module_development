@@ -1,0 +1,14 @@
+This module uses another Git Project, a fork of the original jQuery.Timeline library. You can find it under:
+https://gitlab.cs.fau.de/in19ezej/jquery-timeline
+It expects you to use git submodule and put this library into the subdirectory vendor/in19ezej/ 
+Therefore there must exist the following path from this directory:
+vendor/in19ezej/jquery-timeline/src/timeline.js
+
+So, how to install this module:
+1) clone this repository to the right location of your server (usually /srv/www/htdocs/modules/contrib/ )
+	cd /srv/www/htdocs/modules/contrib/
+2) clone this git including its submodule:
+	git clone git@gitlab.cs.fau.de:in19ezej/wisski_timeline_module_development.git --recurse-submodules
+3) install this module via composer
+4) install and activate this module via WissKI
+
