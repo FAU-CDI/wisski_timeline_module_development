@@ -33,6 +33,7 @@ class hello_block extends BlockBase {
       I could not find a file refering to the actual authors so I looked at git log.
       According to git log history, the authors are the following users: Knurg, Martin Scholz, Michael Dittwald, WissKI, domerz@wisski, fitschen, m.dittwald, mon12ey12ing, root
     */
+
     // check if we ask for multiple pbs and multiple adapters.
     if(isset($config['multi_pb']))
       $multimode = $config['multi_pb'];
@@ -181,8 +182,6 @@ class hello_block extends BlockBase {
       if(empty($dataarray['data']))
         continue;
 
-      //$out[] = [ '#markup' => '<h3>' . $path->getName() . '</h3>'];
-
       foreach($dataarray['data'] as $data) {
 
         $url = NULL;
@@ -209,16 +208,13 @@ class hello_block extends BlockBase {
             $bundle = current($bundles);
           }
 
-#          dpm($data);
 
           // hack if really no bundle was supplied... should never be called!
           if(empty($bundle)) {
             $entity =  \Drupal\wisski_core\Entity\WisskiEntity::load($entity_id);
             $bundle = $entity->bundle;
           }
-#          dpm($entity);
           $url = 'wisski/navigate/' . $entity_id . '/view';
-#          dpm($bundle);
 	  if($path->getName() === "link_it"){
             $timeline_link_array[$data['target_id']] = $url; //contains: 'target_id' and 'wisskiDisamb'
 	  }else if(strpos($path->getName(), 'my') === 0){
@@ -227,34 +223,7 @@ class hello_block extends BlockBase {
 	  else {
             $timeline_array[$wisskiDisamb][$path->getName()] = $data['target_id'];
           }
-	  // special handling for paths with datatypes - use the value from there for reference
-          // if you don't want this - use disamb directly!
-          /*if($path->getDatatypeProperty() != "empty") {
-            $out[] = array(
-              '#type' => 'link',
-#                 '#title' => $data['target_id'],
-              '#title' => $data['target_id'], //wisski_core_generate_title($entity_id, FALSE, $bundle),
-              '#url' => Url::fromRoute('entity.wisski_individual.canonical', ['wisski_individual' => $entity_id]),
-            );
-            $out[] = [ '#markup' => '</br>' ];
-          } else {
-
-            $out[] = array(
-              '#type' => 'link',
-#                 '#title' => $data['target_id'],
-              '#title' => wisski_core_generate_title($entity_id, FALSE, $bundle),
-              '#url' => Url::fromRoute('entity.wisski_individual.canonical', ['wisski_individual' => $entity_id]),
-              //Url::fromUri('internal:/' . $url . '?wisski_bundle=' . $bundle),
-            );
-            $out[] = [ '#markup' => '</br>' ];
-          }*/
         } else {
-          /*$out[] = array(
-            '#type' => 'item',
-            '#markup' =>  $data['target_id'],
-          );
-          $out[] = [ '#markup' => '</br>' ];*/
-          
           //console.log("point of disambiguation should be set");
         }
 
@@ -263,41 +232,9 @@ class hello_block extends BlockBase {
 
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_array'][] = $timeline_array;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_my_array'][] = $timeline_my_array;
-var_dump($timeline_my_array);
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_link_array'][] = $timeline_link_array;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['config'][] = $config;
 
-
-//var_dump($out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['config']);
-
-
-    //Mein urspruenglicher Code speziell fuer die Timeline :
-/*
-    //if (!empty($config['hello_block_name'])) {
-    //  $name = $config['hello_block_name'];
-    //}
-    //else {
-    //  $name = $this->t('to no one');
-    //}
-
-    $my_dom = $this->load_my_html('');
-
-    $result = array(
-      //'#markup' => $this->t('Hello @name!', array(
-      //  '@name' => $name,
-      //)),
-      //'#children' => 'hallo welt <blink><marquee>HALLO!!!</marquee></blink>', //$my_dom,
-      '#children' => $my_dom->saveHTML(),
-      '#attached' => array(
-        'library' => array(
-         // 'wisski_timeline/jquery_timeline',
-          'wisski_timeline/example_timeline',
-        ),
-      ),
-    );
-   ///$result['#hello_block']['#attached']['library'] = 'wisski_timeline/example_timeline';
-   //$result['#hello_block']['#attached']['library'] = 'wisski_timeline/jquery_timeline';
-    return $result;*/
   return $out;
 }
 
@@ -417,235 +354,30 @@ var_dump($timeline_my_array);
         $this->configuration['scale'] = 'billions';
         break;
     }
-    //If you have a filedset wrapper around form elemnts => pass array to getValue() instead of field name alone
-    //$values = $form_state->getValues();
-    //$this->configuration['hello_block_name'] = $values['hello_block_name'];
   }
 
-public function load_my_html_first_test($html) {
-   $document = <<<EOD
-<!DOCTYPE html>
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
-</html>
-EOD;
-
-   // PHP's \DOMDocument serialization adds extra whitespace when the markup
-   // of the wrapping document contains newlines, so ensure we remove all
-   // newlines before injecting the actual HTML body to be processed.
-   $document = strtr($document, array(
-     "\n" => '',
-     '!html' => $html,
-   ));
-   $dom = new \DOMDocument();
-
-   // Ignore warnings during HTML soup loading.
-   @$dom->loadHTML($document);
-   return $dom;
- }
 
 public function load_my_html($html) {
    $document = <<<EOD
 
 <div id="myTimeline">
   <ul class="timeline-events">
-    <li data-timeline-node="{ start:'2018-07-26 23:10',end:'2018-08-27 1:30',row:2,content:'<p>In this way, you can include <em>HTML tags</em> in the event body.<br>:<br>:</p>' }">Event Label</li>
-    <li data-timeline-node="{ start:'2018-07-30 19:00',end:'2017-07-31 1:00',row:1,bgColor:'#fbdac8' }">MYOWNEvent</li>
-    <li data-timeline-node="{ start:'2018-07-30 10:00',end:'2018-07-30 13:00',content:'text text text text ...' }">Event Label</li>
+    <li data-timeline-node="{ eventId:1,start:'2018-07-30 19:00',end:'2017-07-31 1:00',row:1,bgColor:'#fbdac8' }">MYOWNEvent</li>
   </ul>
 </div>
 <div class="timeline-event-view"></div>
 EOD;
  
-   // PHP's \DOMDocument serialization adds extra whitespace when the markup
-   // of the wrapping document contains newlines, so ensure we remove all
-   // newlines before injecting the actual HTML body to be processed.
+   //assure there are no whitespace in document!
    $document = strtr($document, array(
      "\n" => '',
      '!html' => $html,
    ));
    $dom = new \DOMDocument();
  
-   // Ignore warnings during HTML soup loading.
+   // Ignore warnings during loading of html
    @$dom->loadHTML($document);
    return $dom;
  }
-
-
-public function load_my_html_example($html) {
-  $document = <<<EOD
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Example jQuery Timeline</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 4.0.0-alpha.6 -->
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <!-- Font Awesome latest -->
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <!-- jQuery Timeline -->
-  <link href="./css/timeline.min.css?ver=1.0.5" rel="stylesheet">
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="//oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-</head>
-<body>
-<div class="container-fluid">
-
-  <nav class="content-header">
-
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="https://github.com/ka215/jquery.timeline"><i class="fa fa-plug"></i> jQuery Timeline</a></li>
-      <li class="breadcrumb-item active"><a href="./index.html"><i class="fa fa-check-square-o"></i> Bar type</a></li>
-      <li class="breadcrumb-item"><a href="./index2.html">Point type</a></li>
-      <li class="breadcrumb-item"><a href="./index3.html">Multi Languages</a></li>
-    </ol>
-
-  </nav>
-  <!-- /.content-header -->
-
-  <section class="row">
-
-    <div class="content-main col-lg-12">
-    
-      <div id="myTimeline">
-        <ul class="timeline-events">
-          <li>Not allowed event definition</li>
-          <li data-timeline-node="{ start:'2017-5-29 8:00',end:'2017-5-29 10:30',content:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis luctus tortor nec bibendum malesuada. Etiam sed libero cursus, placerat est at, fermentum quam. In sed fringilla mauris. Fusce auctor turpis ac imperdiet porttitor. Duis vel pharetra magna, ut mollis libero. Etiam cursus in leo et viverra. Praesent egestas dui a magna eleifend, id elementum felis maximus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum sed elit gravida, euismod nunc id, ullamcorper tellus. Morbi elementum urna faucibus tempor lacinia. Quisque pharetra purus at risus tempor hendrerit. Nam dui justo, molestie quis tincidunt sit amet, eleifend porttitor mauris. Maecenas sit amet ex vitae mi finibus pharetra. Donec vulputate leo eu vestibulum gravida. Ut in facilisis dolor, vitae iaculis dui.' }">Event Label</li>
-          <li data-timeline-node="{ start:'2017-5-29 10:30',end:'2017-5-29 12:15',bgColor:'#a3d6cc',content:'<p>In this way, you can include <em>HTML tags</em> in the event body.<br><i class=\'fa fa-ellipsis-v\'></i><br><i class=\'fa fa-ellipsis-v\'></i></p>' }">HTML tags is included in the event content</li>
-          <li data-timeline-node="{ start:'2017-5-29 13:00',content:'For the bar type on the timeline, event blocks are displayed in minimum units unless you specify an event end time.' }">Event with undefined of end date</li>
-          <li data-timeline-node="{ end:'2017-5-29 15:00',bgColor:'#e6eb94',content:'In this case, no displayed.' }">Event with undefined of start date</li>
-          <li data-timeline-node="{ start:'2017-5-29 12:45',end:'2017-5-29 16:00',row:2,bgColor:'#89c997',color:'#ffffff',callback:'$(\'#myModal\').modal()',content:'Show modal window via bootstrap' }">Event having callback</li>
-          <li data-timeline-node="{ start:'2017-5-29 16:03',end:'2017-5-29 19:05',row:3,bgColor:'#a1d8e6',color:'#008db7',extend:{toggle:'popover',placement:'bottom',content:'It is also possible to bind external custom events.'} }">Show popover via bootstrap</li>
-          <li data-timeline-node="{ start:'2017-5-28 23:00',end:'2017-5-29 5:15',row:3,extend:{'post_id':13,'permalink':'https://www.google.com/'} }">Event having extended params</li>
-          <li data-timeline-node="{ start:'2017-5-29 5:40',end:'2017-5-29 8:20',row:3,bgColor:'#ef857d',color:'#fff',content:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis luctus tortor nec bibendum malesuada. Etiam sed libero cursus, placerat est at, fermentum quam. In sed fringilla mauris. Fusce auctor turpis ac imperdiet porttitor.' }">Lorem Ipsum</li>
-          <li data-timeline-node="{ start:'2017-5-29 10:00',end:'2017-5-29 19:00',row:4,bdColor:'#942343' }">Event having image for point type</li>
-          <li data-timeline-node="{ start:'2017-4-1 20:00',end:'2017-5-29 8:30',row:5 }">Long event from the past over range</li>
-          <li data-timeline-node="{ start:'2017-5-29 19:00',end:'2017-6-14 1:00',row:5,bgColor:'#fbdac8' }">Long event until the future over range</li>
-        </ul>
-      </div>
-    
-    </div>
-    <!-- /.content-main -->
-
-    <div class="col-lg-6 col-md-12" hidden>
-
-      <div class="card mb-3">
-        <div class"card-block">
-          <h5><i class="fa fa-cog"></i> Timeline Configuration</h5>
-          <div class="card-text">
-            <!-- configuration content -->
-          </div>
-        </div>
-      </div>
-      <!-- /.card -->
-    </div>
-    <!-- /.col -->
-    <div class="col-lg-12 col-md-12">
-
-      <div class="card mb-3">
-        <div class="card-block timeline-event-view">
-          <p class="h1">Timeline Event Detail</p>
-          <p class="lead">Please click on any event on the above timeline.</p>
-        </div>
-      </div>
-      <!-- /.card -->
-    </div>
-    <!-- /.col -->
-
-  </section>
-  <!-- /.row -->
-
-</div>
-<!-- /.container-fluid -->
-
-<div class="modal fade" id="myModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="timeline-event-view"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- /.modal -->
-
-<!-- REQUIRED JS SCRIPTS -->
-
-<!-- jQuery (latest 3.2.1) -->
-<script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-<!-- tether 1.4.0 (for using bootstrap's tooltip component) -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" crossorigin="anonymous"></script>
-<!-- Bootstrap 4.0.0-alpha.6 -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-<!-- jQuery Timeline -->
-<script src="./js/timeline.min.js?ver=1.0.5"></script>
-<!-- local scripts -->
-<script>
-$(function () {
-
-  $("#myTimeline").timeline({
-    startDatetime: '2017-05-28',
-    rangeAlign: 'center'
-  });
-
-  $("#myTimeline").on('afterRender.timeline', function(){
-    // usage bootstrap's popover
-    $('.timeline-node').each(function(){
-      if ( $(this).data('toggle') === 'popover' ) {
-        $(this).attr( 'title', $(this).text() );
-        $(this).popover({
-          trigger: 'hover'
-        });
-      }
-    });
-  });
-
-  /* 
-  $('#myTimeline').timeline('openEvent', function(){
-    console.info( $(this).data );
-    $('.extend-params');
-  });
-  */
-
-
-});
-</script>
-</body>
-</html>
-EOD;
-
-  // PHP's \DOMDocument serialization adds extra whitespace when the markup
-  // of the wrapping document contains newlines, so ensure we remove all
-  // newlines before injecting the actual HTML body to be processed.
-  $document = strtr($document, array(
-    "\n" => '',
-    '!html' => $html,
-  ));
-  $dom = new \DOMDocument();
-
-  // Ignore warnings during HTML soup loading.
-  @$dom
-    ->loadHTML($document);
-  return $dom;
-}
-
-
-
 
 }

@@ -30,6 +30,10 @@
         //console.log('Events addition successfully!');
       };
 
+      $("#myTimeline").on('afterRender.timeline', function(){
+        $("#myTimeline").timeline('removeEvent', [1]);
+      });
+
       var timeline_array =  drupalSettings.wisski_timeline.example_timelineJS.timeline_array;
       var timeline_link_array = drupalSettings.wisski_timeline.example_timelineJS.timeline_link_array;
       var timeline_my_array = drupalSettings.wisski_timeline.example_timelineJS.timeline_my_array;
