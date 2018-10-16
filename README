@@ -5,10 +5,11 @@ Therefore there must exist the following path from this directory:
 vendor/in19ezej/jquery-timeline/src/timeline.js
 
 So, how to install this module:
-1) clone this repository to the right location of your server (usually /srv/www/htdocs/modules/contrib/ )
+1) go to the right location of your server (usually /srv/www/htdocs/modules/contrib/ )
 	cd /srv/www/htdocs/modules/contrib/
 2) clone this git including its submodule:
 	git clone git@gitlab.cs.fau.de:in19ezej/wisski_timeline_module_development.git --recurse-submodules
-3) install this module via composer
+3) install this module via composer (you must already have composer downloaded!)
+	php composer.phar install
 4) install and activate this module via WissKI
 
