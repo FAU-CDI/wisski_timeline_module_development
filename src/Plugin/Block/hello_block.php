@@ -110,8 +110,6 @@ class hello_block extends BlockBase {
 
           // if there is nothing, then don't show up!
           if(empty($allpbpaths) || !isset($allpbpaths[$linkgroup->id()]))
-//            return;
-// do not return! this leads to other pbs being unable to answer!
             continue;
 
           $pbarray = $allpbpaths[$linkgroup->id()];
@@ -125,20 +123,13 @@ class hello_block extends BlockBase {
               continue;
 
             $path = \Drupal\wisski_pathbuilder\Entity\WisskiPathEntity::load($childid);
-#drupal_set_message("child: " . serialize($childid));            
-#            $adapters = \Drupal\wisski_salz\Entity\WisskiSalzAdapter
-
-#              dpm($adapters);
 
             foreach($adapters as $adapter) {
               $engine = $adapter->getEngine();
 
               // get the data for this specific thing
               $tmpdata = $engine->pathToReturnValue($path, $pb, $individualid, 0, 'target_id', FALSE);
-              //TODO: earliest, latest
-#              drupal_set_message("path: " . serialize($path));
 
-#              dpm($tmpdata, "tmp");
               if(!empty($tmpdata)) {
                 $dataout[$path->id()]['path'] = $path;
 
@@ -148,25 +139,16 @@ class hello_block extends BlockBase {
                   $dataout[$path->id()]['data'] = array();
 
                 $dataout[$path->id()]['data'] = array_merge($dataout[$path->id()]['data'], $tmpdata);
-                //TODO: eraliest. latest, etc.
               }
             }
 
           }
 
         }
-        #dpm($linkgroup);
       }
     }
 
 
-    // cache for 2 seconds so subsequent queries seem to be fast
-#    if(!empty($dataout))  
-    //$out[]['#cache']['max-age'] = 2;
-    // this does not work
-#    $out['#cache']['disabled'] = TRUE;
-#    $out[] = [ '#markup' => 'Time : ' . date("H:i:s"),];
-#    drupal_set_message(serialize($dataout));
     $topBundles = array();
     $set = \Drupal::configFactory()->getEditable('wisski_core.settings');
     $only_use_topbundles = $set->get('wisski_use_only_main_bundles');
@@ -177,21 +159,13 @@ class hello_block extends BlockBase {
     //Timelinegrundgeruest
     $my_dom = $this->load_my_html('');
 
-    $test_var = 5;
 
     $out[] = array(
       '#children' => $my_dom->saveHTML(),
       '#attached' => array(
         'library' => array(
           'wisski_timeline/example_timeline',
-        ),/*
-	'drupalSettings' => array(
-	  'wisski_timeline' => array(
-	    'example_timelineJS' => array(
-	      'test_var' => $test_var,
-	    )
-	  ),
-	),*/
+        ),
       ),
     );
 
@@ -206,7 +180,7 @@ class hello_block extends BlockBase {
       if(empty($dataarray['data']))
         continue;
 
-      $out[] = [ '#markup' => '<h3>' . $path->getName() . '</h3>'];
+      //$out[] = [ '#markup' => '<h3>' . $path->getName() . '</h3>'];
 
       foreach($dataarray['data'] as $data) {
 
@@ -216,8 +190,6 @@ class hello_block extends BlockBase {
           $url = $data['wisskiDisamb'];
         $wisskiDisamb = $url;
 
-//@debug
-//        var_dump($path->getName());
         if(!empty($url)) {
 
           $entity_id = AdapterHelper::getDrupalIdForUri($url);
@@ -246,14 +218,14 @@ class hello_block extends BlockBase {
 #          dpm($entity);
           $url = 'wisski/navigate/' . $entity_id . '/view';
 #          dpm($bundle);
-	  if($path->getName() == "link_it"){
+	  if($path->getName() === "link_it"){
             $timeline_link_array[$data['target_id']] = $url; //contains: 'target_id' and 'wisskiDisamb'
 	  }else {
             $timeline_array[$wisskiDisamb][$path->getName()] = $data['target_id']; //TODO
           }
 	  // special handling for paths with datatypes - use the value from there for reference
           // if you don't want this - use disamb directly!
-          if($path->getDatatypeProperty() != "empty") {
+          /*if($path->getDatatypeProperty() != "empty") {
             $out[] = array(
               '#type' => 'link',
 #                 '#title' => $data['target_id'],
@@ -271,25 +243,26 @@ class hello_block extends BlockBase {
               //Url::fromUri('internal:/' . $url . '?wisski_bundle=' . $bundle),
             );
             $out[] = [ '#markup' => '</br>' ];
-          }
+          }*/
         } else {
-          $out[] = array(
+          /*$out[] = array(
             '#type' => 'item',
             '#markup' =>  $data['target_id'],
           );
-          $out[] = [ '#markup' => '</br>' ];
+          $out[] = [ '#markup' => '</br>' ];*/
+          
+          //console.log("point of disambiguation should be set");
         }
 
       }
     }
 
-    $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['test_var'][] = $test_var;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_array'][] = $timeline_array;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_link_array'][] = $timeline_link_array;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['config'][] = $config;
 
 
-var_dump($out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['config']);
+//var_dump($out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['config']);
 
 
     //Mein urspruenglicher Code speziell fuer die Timeline :
@@ -332,7 +305,6 @@ var_dump($out['#attached']['drupalSettings']['wisski_timeline']['example_timelin
 
     $timelineblockpbid = "timeline_pathbuilder";
 
-    //TODO: will ich diese Moeglichkeit ueberhaupt?
     $form['multi_pb'] = [
       '#type' => 'checkbox',
       '#title' => 'Use timelineblock with any pathbuilder and adapter',
