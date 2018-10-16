@@ -3,50 +3,39 @@
   Drupal.behaviors.example_timeline = {
     attach: function (context, settings) {
     //alert('HOFFENTLICH - example_timeline');
-    console.log("context: ");
-    console.log(context);
+    var config = drupalSettings.wisski_timeline.example_timelineJS.config;
     var exists = $("#myTimeline", context);
-    console.log("exists: ");
-    console.log(exists);
     exists.once('example-timeline-unique-key').each(function () {
-      // Apply the myCustomBehaviour effect to all the elements only once.
-      //alert('Something happened! In example_timeline!');
       var myTimeline = $("#myTimeline").timeline({
-	  type  : "bar",
+	  type  : "bar", 
+          startDatetime:  config[0]['startdate'],
           //startDatetime: '-002018/07/29',
-          startDatetime: '11/10/10 v. Chr.',
+          //startDatetime: '2011/10/10 v. Chr.',
           //startDatetime: '1613/07/29',	//before Biedermeier
+          scale: config[0]['scale'],
           //scale: 'days',
 	  //scale: 'months', 
           //scale: 'years',
-	  scale: 'decades',
+	  //scale: 'decades',
 	  //scale: 'centuries',
           //scale: 'millennia',
 	  //scale: 'millions',
 	  //scale: 'billions',
-          range: 50,
-	  rows: 10,
+          //range: 50,
+          range: parseInt(config[0]['range']),
+	  //rows: 10,
+	  rows: parseInt(config[0]['rows']),
 	  langsDir : 'vendor/in19ezej/jquery-timeline/dist/langs/',
       }).init();
 
       var events_to_add = [{start:'2018-07-29 08:00',end:'2018-07-29 10:00',label:'Event 1a',content:'Event body'}];
 
-      var test_var_js = drupalSettings.wisski_timeline.example_timelineJS.test_var;
-      console.log("test_var_js: ");
-      /*test_var_js.forEach(function(element){
-        console.log(element);
-      });*/
       var timeline_array =  drupalSettings.wisski_timeline.example_timelineJS.timeline_array;
       var timeline_link_array = drupalSettings.wisski_timeline.example_timelineJS.timeline_link_array;
       timeline_array.forEach(function(timeline_elements){
-        //console.log(timeline_element);
-        /*timeline_element.forEach(function(attribute){
-          console.log(attribute);
-        });*/
         for(var key in timeline_elements){  
           var outer_element_to_add = {};
           var inner_element_to_add = {};
-	  //console.log(timeline_elements[key]);i
           var element_obj = timeline_elements[key];
           var has_object = element_obj['name_of_object'];
           //we probably have a sub-timespan, if name_of_object is not set
