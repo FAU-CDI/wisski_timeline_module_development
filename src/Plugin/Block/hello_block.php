@@ -286,7 +286,10 @@ class hello_block extends BlockBase {
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['test_var'][] = $test_var;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_array'][] = $timeline_array;
     $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['timeline_link_array'][] = $timeline_link_array;
+    $out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['config'][] = $config;
 
+
+var_dump($out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS']['config']);
 
 
     //Mein urspruenglicher Code speziell fuer die Timeline :
@@ -355,12 +358,35 @@ class hello_block extends BlockBase {
       '#default_value' => isset($config['pathbuilder']) ? $config['pathbuilder'] : Pathbuilder::GENERATE_NEW_FIELD,
     );
 
-    /*$form['hello_block_name'] = [
+    $form['startdate'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Who'),
-      '#description' => $this->t('Who do you want to say hello to?'),
-      '#default_value' => isset($config['hello_block_name']) ? $config['hello_block_name'] : '',
-    ];*/
+      '#title' => $this->t('Startdatum'),
+      '#description' => $this->t('Zu welchem Zeitpunkt soll der Zeitstrahl beginnen?'),
+      '#default_value' => '2018/08/19'
+    );
+
+    $field_options_scale = array("Jahre", "Jahrzehnte", "Jahrhunderte", "Jahrtausende", "Jahrmillionen", "Jahrmilliarden");
+    $form['scale'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Skalierung des Zeitstrahls'),
+      '#description' => $this->t('Welche Einheit soll der Zeitstrahl darstellen?'),
+      '#options' => $field_options_scale,
+      '#default_value' => 'Jahrhunderte'
+    );
+
+    $form['range'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Zeitstrahllänge'),
+      '#description' => $this->t('Wie viele Einheiten der Skalierung soll dein Zeitstrahl umfassen?'),
+      '#default_value' => '10'
+    );
+
+    $form['rows'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Zeilenanzahl'),
+      '#description' => $this->t('Wie viele Zeilen soll dein Zeitstrahl umfassen?'),
+      '#default_value' => '5'
+    );
 
     return $form;
   }
@@ -381,15 +407,38 @@ class hello_block extends BlockBase {
 
       // generate a pb with a nice name - but it is unique for this block due to its id.            
       $pb = new \Drupal\wisski_pathbuilder\Entity\WisskiPathbuilderEntity(array("id" => 'pb_' . $block_id, "name" => "" . $title . " (Timelineblock)"), "wisski_pathbuilder");
-      $pb->setType("linkblock");	//TODO oder path????
+      $pb->setType("linkblock");
       $pb->save();
 
       $this->configuration['pathbuilder'] = $pb->id();
     } else {
       $this->configuration['pathbuilder'] = $form_state->getValue('pathbuilder');
     }
+    $this->configuration['startdate'] = $form_state->getValue('startdate');
+    $this->configuration['scale'] = $form_state->getValue('scale');
+    $this->configuration['rows'] = $form_state->getValue('rows');
+    $this->configuration['range'] = $form_state->getValue('range');
 
-
+    switch ($form_state->getValue('scale')){
+      case 0:	//Jahre
+        $this->configuration['scale'] = 'years';
+        break;
+      case 1: //'Jahrzehnte':
+        $this->configuration['scale'] = 'decades';
+        break;
+      case 2: //'Jahrhunderte':
+        $this->configuration['scale'] = 'centuries';
+        break;
+      case 3: //'Jahrtausende':
+        $this->configuration['scale'] = 'millennia';
+        break;
+      case 4: //'Jahrmillionen':
+        $this->configuration['scale'] = 'millions';
+        break;
+      case 5: //'Jahrmilliarden':
+        $this->configuration['scale'] = 'billions';
+        break;
+    }
     //If you have a filedset wrapper around form elemnts => pass array to getValue() instead of field name alone
     //$values = $form_state->getValues();
     //$this->configuration['hello_block_name'] = $values['hello_block_name'];
