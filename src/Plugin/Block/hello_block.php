@@ -15,7 +15,7 @@ use Drupal\wisski_core\Entity\WisskiEntity;
  *
  * @Block(
  *   id = "hello_block",
- *   admin_label = @Translation("Hello block!"),
+ *   admin_label = @Translation("TimelineBlock"),
  *   category = @Translation("Hello World"),
  * )
  */
