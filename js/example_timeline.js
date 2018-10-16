@@ -2,7 +2,6 @@
   'use strict';
   Drupal.behaviors.example_timeline = {
     attach: function (context, settings) {
-    //alert('HOFFENTLICH - example_timeline');
     var config = drupalSettings.wisski_timeline.example_timelineJS.config;
     var exists = $("#myTimeline", context);
     exists.once('example-timeline-unique-key').each(function () {
@@ -21,14 +20,12 @@
           //scale: 'millennia',
 	  //scale: 'millions',
 	  //scale: 'billions',
-          //range: 50,
           range: parseInt(config[0]['range']),
-	  //rows: 10,
 	  rows: parseInt(config[0]['rows']),
 	  langsDir : 'vendor/in19ezej/jquery-timeline/dist/langs/',
       }).init();
 
-      var events_to_add = [/*{start:'2018-07-29 08:00',end:'2018-07-29 10:00',label:'Event 1a',content:'Event body'}*/];
+      var events_to_add = [];
       var events_added_confirm_func = function( self, data ){
         //console.log('Events addition successfully!');
       };
@@ -134,7 +131,6 @@
               inner_element_to_add['content'] = 'potentieller Teil des Intervalls des Objekts: ' + element_obj['name_of_object'].link(url_str);
               outer_element_to_add['inner_element'] = inner_element_to_add;
             }
-	    //events_to_add.push(inner_element_to_add);
 	  }
 	  if(compare_date_strings(outer_element_to_add['start'], outer_element_to_add['end']) <= 0){
             events_to_add.push(outer_element_to_add);
@@ -142,49 +138,34 @@
 	    console.log("Fehler: Ein äußeres Intervall  hoert auf, bevor es beginnt!");
           }
 
-          //console.log(outer_element_to_add);
         }
-        /*console.log("earliest start: ");
-	console.log(timeline_element['earliest_start']);
-        console.log("latest_end: ");
-        console.log(timeline_element.latest_end);*/
       });
-//$out['#attached']['drupalSettings']['wisski_timeline']['example_timelineJS'][wisskiDisamb][$path->getName()] = $data['target_id'];
 
       events_to_add.sort(function(left, right){
 	var a = left['start'];
 	var b = right['start'];
 	return compare_date_strings(a, b);
-        //return a['start'] - b['start'];
       });
 
-
-      /*events_to_add.forEach(function(element){
-        console.log("ELEMENT: " + element['start']);
-      });*/
-
-      var first_row = 2; //erste Zeile, in der was gezeichnet werden soll //TODO: Abhaengig von Endversion
-      var numb_rows = 5; //ANzahl der rows der Timeline //TODO: abhaengig von INitialisierung!
+      var first_row = 2; //first row of timeline that should get rendered
+      var numb_rows = parseInt(config[0]['rows']); //last row of the timeline that should get rendered
       var up_boarders = [];
       for(var j=0; j<numb_rows+1; j++){
-        // Veraltet: Hack für den Anfangswert: Nimm nur '-'  Dadurch, dass  das '-' am Anfang weggenommen wird, bleibt nur noch ein leerer STring übrig. Ein leerer String ist immer kürzer als ein anderer String und damit wird dessen Wert als kleiner gewertet.; 
-        // wird mit Konstante für niedrigstmögliches Datun befüllt
+        // wird mit Konstante für niedrigstmögliches Datum befüllt
+        // gets filled with constant for lowest possible date
         up_boarders[j] = "-oo";
       }
       var inner_elements_to_add = [];
       events_to_add.forEach(function(curr_event){
         var enough_space = false;
         for(var j=first_row; j<numb_rows+1; j++){
-	  //console.log("" + j + " UP_BOARDER: " + up_boarders[j]);
 	  if(compare_date_strings(up_boarders[j], curr_event['start']) < 0){
-            //console.log("COMPARED: " + compare_date_strings(up_boarders[j], curr_event['start']));
 	    curr_event['row'] = j;
 	    up_boarders[j] = curr_event['end'];
 	    if(curr_event['inner_element'] !== undefined){
 	      curr_event['inner_element']['row'] = j;
 	      inner_elements_to_add.push(curr_event['inner_element']);
 	    }
-	    //console.log("EVENT ANOTATED!");
             enough_space = true;
 	    break;
 	  }
@@ -204,67 +185,9 @@
       $("#myTimeline").on('afterRender.timeline', function(){
         $("#myTimeline").timeline('addEvent', events_to_add, events_added_confirm_func);
       });
-      /*$("#myTimeline").timeline('render', 	  {type  : "bar",
-          startDatetime: '-002018/01/29',
-	  scale: 'months', 
-          scale: 'years',
-          range: 10,
-	  langsDir : 'vendor/in19ezej/jquery-timeline/dist/langs/'});*/
 
     });
     
-/*    var myTimeline = $("#myTimeline").timeline({
-        startDatetime: '2018-07-26',
-        type  : "bar",
-        langsDir : '../vendor/in19ezej/jquery-timeline/dist/langs/',
-        datetimeFormat: { meta: 'g:i A, D F j, Y' },
-    });
-    myTimeline.timeline( 'addEvent', [
-      {start:'2018-07-27',end:'2018-07-27',label:'Event 1',content:'Event body'},
-      {start:'2018-07-28',end:'2018-07-28',label:'Event 2',content:'Event body'}
-    ],
-    function( self, data ){
-      console.log('Events addition successfully!');
-    });*/
-   /* $myTimleline.timeline('addEvent', [
-      {start: '2017-1-1 8:00', end: '2017-1-1 10:00', label: 'Event 1', content: 'Event body'}
-    ]);
-
-    //used in example
-    $(function () {
-     /* $("#myTimeline").timeline({
-        startDatetime: '2017-05-28',
-        rangeAlign: 'center'
-      });
-
-      $("#myTimeline").on('afterRender.timeline', function(){
-        // usage bootstrap's popover
-        $('.timeline-node').each(function(){
-          if ( $(this).data('toggle') === 'popover' ) {
-            $(this).attr( 'title', $(this).text() );
-            $(this).popover({
-              trigger: 'hover'
-            });
-          }
-        });
-      });
-
-      
-      $('#myTimeline').timeline('openEvent', function(){
-        console.info( $(this).data );
-        $('.extend-params');
-      });
-      
-    });*/
-
-/*
-    $('.timeline_body', context).once('example_timeline', function () {
-      //$("#myTimeline").timeline();
-      console.log('Something happened! Says example_timeline');
-      // Apply the myCustomBehaviour effect to all the elements only once.
-      alert('Ein Zufallsereignis ist geschehen! In example_timeline!');
-    });*/
-      //apply everything here once per element
     }
   };
 
