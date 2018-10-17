@@ -2,6 +2,7 @@
   'use strict';
 /*
 This part of the module manages the events of the timeline.
+Copyright (C) 2018 Lisa Dreier
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
